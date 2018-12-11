@@ -5,7 +5,7 @@ import sqlite3
 
 app = Flask(__name__)
 
-conn = sqlite3.connect('OS_Employee.db')
+#conn = sqlite3.connect('OS_Employee.db')
 
 df = pd.read_csv("SalesDataOrders.csv", index_col=0)
 headers = list(df.columns.values)
@@ -59,7 +59,7 @@ def SignIn():
             cursor = db.cursor()
         find_Employee = ("SELECT * FROM Employee WHERE Email = ? AND Password = ?")
         cursor.execute(find_Employee,[(email),(password)])
-        results = cursor.fetchall()
+        results = cursor.fetchone()
         
         if results:
             return jsonify('success')  

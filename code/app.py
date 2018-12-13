@@ -1,6 +1,7 @@
 from flask import Flask, request, jsonify
 from flask_restful import Resource, Api, reqparse
 import pandas as pd
+import numpy as np
 import sqlite3
 
 app = Flask(__name__)
@@ -31,7 +32,9 @@ def topprofit():
     orders_year = df.loc[df["Order Date"].dt.year == 2014] 
     prod_prof_col = orders_year[["Product Name", "Profit"]]
     prod_prof = prod_prof_col.groupby(by="Product Name").sum().sort_values(by="Profit", ascending=False).reset_index()
-    top10 = prod_prof.head(15)
+    prod_prof['Profit'] = prod_prof['Profit'].round(2)
+    #prod_prof['Profit'] = np.where( prod_prof['Profit'] < 0, '-$' + prod_prof['Profit'].astype(str).str[1:], '$' + prod_prof['Profit'].astype(str))
+    top10 = prod_prof.head(10)
     return top10.to_json(orient='records')
 
 @app.route('/profitByMonth', methods=['GET'])
@@ -48,6 +51,8 @@ def ProfitPerSegment():
     df['Profit'] = df['Profit'].round(2)
     seg_pro_col = df[['Segment', 'Profit']]
     segment_profits = seg_pro_col.groupby(["Segment"]).sum().sort_values(by=['Profit']).reset_index()
+    segment_profits['Profit'] = segment_profits['Profit'].round(2)
+    #segment_profits['Profit'] = np.where( segment_profits['Profit'] < 0, '-$' + segment_profits['Profit'].astype(str).str[1:], '$' + segment_profits['Profit'].astype(str))
     return segment_profits.to_json(orient='records')
 
 @app.route('/signin', methods=['GET', 'POST'])

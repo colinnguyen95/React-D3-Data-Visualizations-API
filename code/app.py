@@ -13,6 +13,8 @@ Team Functions: We all used pandas for data manipulation
 Note: There might be trouble running these functions without 
         installing required dependencies of the project. A video explaining how 
         this app works will be included.
+
+source venv/bin/activate
 """
 
 from flask import Flask, request, jsonify

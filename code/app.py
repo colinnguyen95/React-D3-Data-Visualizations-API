@@ -38,9 +38,12 @@ for head in headers[:16]:
 def hello():        
     return 'Hello'
 
-@app.route('/top5', methods=['GET'])
+@app.route('/top5', methods=['GET', 'POST'])
 def topprofit():
+    # firstName = request.get_json().get('firstName')
+    # D3Year = request.get_json().get('D3Year')
     orders_year = df.loc[df["Order Date"].dt.year == 2017] 
+    # orders_year = df.loc[df["Order Date"].dt.year == D3Year] 
     prod_prof_col = orders_year[["Product Name", "Profit"]]
     prod_prof = prod_prof_col.groupby(by="Product Name").sum().sort_values(by="Profit", ascending=False).reset_index()
     prod_prof['Profit'] = prod_prof['Profit'].round(2)
